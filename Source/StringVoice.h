@@ -13,6 +13,9 @@
 class StringVoice : public juce::SynthesiserVoice
 {
 public:
+
+	//========================================================
+#pragma region overrides
 	bool canPlaySound(juce::SynthesiserSound* sound) override;
 	void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition) override;
 	void stopNote(float velocity, bool allowTailOff) override;
@@ -20,5 +23,41 @@ public:
 	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels);
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 	void pitchWheelMoved(int newPitchWheelValue) override;
+#pragma endregion
+	//========================================================
+	void deriveParameters();
 private:
+	//Util
+	double sampleRate;
+	float k; // Sampling period
+
+	//String
+	float c = 400.0f; //Wavespeed
+	float L = 1.0f; //Length of string
+	float h; //Grid spacing
+	float hSq; //Grid spacing squared
+	int N; //Interval count
+	float lambda;//Courant number
+	float lambdaSq;//Courant number squared
+	float rho = 7850.0f; //Material Density (kg/m^3)
+	float r = 5 * pow(10, -4);//Radius
+	float T = 1000.0f;//Tension
+	const float E = 2 * pow(10, 11);//Young's modulus
+	float sigma_0 = 1.0f;//Frequency independent damping
+	float sigma_1 = 0.000000005f;//Frequency dependent damping
+	float A; //Cross-sectional Area
+	float kappa;//Stiffness coefficient
+	float I; //Inertia
+	float mu;
+	float muSq;
+	juce::ADSR adsr;
+	//State
+	std::vector<std::vector<float>> uStates; //3 by N State matrix for wave equation
+	std::vector<float*> u; //uStates pointer
+
+	void excite();
+	float getOutput(float ratio);
+	void calculateScheme();
+	void updateStates();
+	float limit(float sample);
 };
