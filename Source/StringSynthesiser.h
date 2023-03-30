@@ -8,4 +8,12 @@
   ==============================================================================
 */
 
-#pragma once
+#include <JuceHeader.h>
+
+class StringSynthesiser : juce::Synthesiser
+{
+public:
+
+private:
+
+};

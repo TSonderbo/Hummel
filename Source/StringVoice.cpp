@@ -18,6 +18,11 @@ bool StringVoice::canPlaySound(juce::SynthesiserSound* sound)
 
 void StringVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
+	//f0 = c/(2L)
+	c = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) * 2 * L;
+
+	deriveParameters();
+
 	excite();
 }
 
@@ -43,7 +48,7 @@ void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numC
 
 	deriveParameters();
 
-	excite();
+	//excite();
 }
 
 void StringVoice::deriveParameters()

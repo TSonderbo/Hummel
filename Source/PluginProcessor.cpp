@@ -22,8 +22,11 @@ HummelAudioProcessor::HummelAudioProcessor()
                        ), apvts(*this, nullptr, "Parameters", createParams())
 #endif
 {
+    for (int i = 0; i < 3; i++)
+    {
+        synth.addVoice(new StringVoice());
+    }
     synth.addSound(new StringSound());
-    synth.addVoice(new StringVoice());
 }
 
 HummelAudioProcessor::~HummelAudioProcessor()
