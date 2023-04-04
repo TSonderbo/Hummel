@@ -32,7 +32,7 @@ private:
 	float k; // Sampling period
 
 	//String
-	float c = 400.0f; //Wavespeed
+	float c; //Wavespeed
 	float L = 1.0f; //Length of string
 	float h; //Grid spacing
 	float hSq; //Grid spacing squared

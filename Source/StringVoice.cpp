@@ -19,7 +19,7 @@ bool StringVoice::canPlaySound(juce::SynthesiserSound* sound)
 void StringVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
 	//f0 = c/(2L)
-	c = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) * 2 * L;
+	L = c * juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) / 2;
 
 	deriveParameters();
 
@@ -53,7 +53,18 @@ void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numC
 
 void StringVoice::deriveParameters()
 {
+	c = sqrt(T / rho * A);
 	h = c * k;
+
+	float stable = sqrtf((c * c * k * k + 4 * sigma_1 * k + sqrtf(pow(c * c * k * k + 4 * sigma_1 * k, 2) + 16 * kappa * kappa * k * k)) / 2);
+
+	float _h = c * k;
+
+	if (_h < stable)
+	{
+		DBG("UNSTABLE");
+	}
+
 	N = (int)(L / h);
 	h = (float)L / (float)N;
 	lambdaSq = (c * c) * (k * k) / (h * h);
@@ -71,14 +82,7 @@ void StringVoice::deriveParameters()
 		u[i] = &uStates[i][0];
 	}
 
-	float stable = sqrtf((c * c * k * k + 4 * sigma_1 * k + sqrtf(pow(c * c * k * k + 4 * sigma_1 * k, 2) + 16 * kappa * kappa * k * k))/2);
-
-	float _h = c * k;
-
-	if (_h < stable)
-	{
-		DBG("UNSTABLE");
-	}
+	
 }
 
 void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
@@ -138,7 +142,7 @@ void StringVoice::calculateScheme()
 
 	//Clamped boundary
 	//Update equation for stiff string
-	for (int l = 1; l < N; l++)
+	for (int l = 2; l < N - 1; l++)
 	{
 		u[2][l] = ((2 - 2 * lambdaSq - 6*muSq - ((4 * sigma_1 * k) / hSq)) * u[1][l]
 			+ (lambdaSq + 4 * muSq + ((2 * sigma_1 * k) / hSq)) * (u[1][l + 1] + u[1][l - 1])
