@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "ScopeComponent.h"
+#include "ParameterGroup.h"
 
 //==============================================================================
 /**
@@ -30,6 +31,7 @@ private:
     // access the processor object that created it.
     HummelAudioProcessor& audioProcessor;
 
+    ParameterGroup parameterGroup { audioProcessor };
     ScopeComponent oscilloscope;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HummelAudioProcessorEditor)

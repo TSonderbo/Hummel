@@ -15,8 +15,9 @@ HummelAudioProcessorEditor::HummelAudioProcessorEditor (HummelAudioProcessor& p)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (400, 400);
 
+    addAndMakeVisible(parameterGroup);
     addAndMakeVisible(oscilloscope);
 }
 
@@ -40,8 +41,25 @@ void HummelAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-    const float paddingX = 10;
-    const float paddingY = 10;
+    //const float paddingX = 10;
+    //const float paddingY = 10;
 
-    oscilloscope.setBounds(paddingX, paddingY, getWidth() - 2 * paddingX, getHeight() - 2 * paddingY);
+    //parameterGroup.setBounds(paddingX, paddingY, parameterGroup.getWidth(), parameterGroup.getHeight());
+
+    //oscilloscope.setBounds(paddingX, parameterGroup.getBottom(), getWidth() - 2 * paddingX - parameterGroup.getWidth(), getHeight() - 2 * paddingY - parameterGroup.getHeight());
+
+    juce::FlexBox fb;
+    fb.flexDirection = juce::FlexBox::Direction::column;
+
+    fb.items.add(juce::FlexItem(parameterGroup)
+        .withMinWidth(200.0f)
+        .withMinHeight(100.0f)
+        .withFlex(1.0f));
+
+    fb.items.add(juce::FlexItem(oscilloscope)
+        .withMinWidth(200.0f)
+        .withMinHeight(200.0f)
+        .withFlex(1.0f));
+
+    fb.performLayout(getLocalBounds().toFloat());
 }

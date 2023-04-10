@@ -25,14 +25,14 @@ public:
 	void pitchWheelMoved(int newPitchWheelValue) override;
 #pragma endregion
 	//========================================================
-	void deriveParameters();
+	void deriveParameters(const juce::NamedValueSet& valueSet);
 private:
 	//Util
 	double sampleRate;
 	float k; // Sampling period
 
 	//String
-	float c; //Wavespeed
+	float c = 400.0f; //Wavespeed
 	float L = 1.0f; //Length of string
 	float h; //Grid spacing
 	float hSq; //Grid spacing squared
@@ -44,16 +44,19 @@ private:
 	float T = 1000.0f;//Tension
 	const float E = 2 * pow(10, 11);//Young's modulus
 	float sigma_0 = 1.0f;//Frequency independent damping
-	float sigma_1 = 0.000000005f;//Frequency dependent damping
+	float sigma_1 = 0.05f;//Frequency dependent damping
 	float A; //Cross-sectional Area
 	float kappa;//Stiffness coefficient
 	float I; //Inertia
 	float mu;
 	float muSq;
-	juce::ADSR adsr;
+	
 	//State
 	std::vector<std::vector<float>> uStates; //3 by N State matrix for wave equation
 	std::vector<float*> u; //uStates pointer
+
+	//Effects
+	juce::ADSR adsr;
 
 	void excite();
 	float getOutput(float ratio);

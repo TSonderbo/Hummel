@@ -150,11 +150,16 @@ void HummelAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
+    valueSet.set("T", apvts.getRawParameterValue("T")->load());
+    valueSet.set("rho", apvts.getRawParameterValue("rho")->load());
+    valueSet.set("sigma0", apvts.getRawParameterValue("sigma0")->load());
+    valueSet.set("sigma1", apvts.getRawParameterValue("sigma1")->load());
+
     for (int i = 0; i < synth.getNumVoices(); i++)
     {
         if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(i)))
         {
-            //Update params goes here eventually...
+            voice->deriveParameters(valueSet);
         }
     }
 
@@ -201,14 +206,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout HummelAudioProcessor::create
     //Inserts params here...
 
     //ADSR
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("attack", "Attack", juce::NormalisableRange<float> {0.1f, 1.0f}, 0.1f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("decay", "Decay", juce::NormalisableRange<float> {0.1f, 1.0f}, 0.1f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("sustain", "Sustain", juce::NormalisableRange<float> {0.1f, 1.0f}, 0.9f));
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("release", "Release", juce::NormalisableRange<float> {0.1f, 1.0f}, 0.4f));
-    //Buchla
-    params.push_back(std::make_unique<juce::AudioParameterFloat>("amplitude", "Amplitude", juce::NormalisableRange<float> {0.1f, 10.0f}, 0.1f));
+    /*params.push_back(std::make_unique<juce::AudioParameterFloat>("attack", "Attack", juce::NormalisableRange<float> (0.1f, 1.0f), 0.1f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("decay", "Decay", juce::NormalisableRange<float> (0.1f, 1.0f), 0.1f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("sustain", "Sustain", juce::NormalisableRange<float> (0.1f, 1.0f), 0.9f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("release", "Release", juce::NormalisableRange<float> (0.1f, 1.0f), 0.4f));*/
 
-
+    //Add params for string
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("c", "Wavespeed", juce::NormalisableRange<float>(200.0f, 1000.0f), 400.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("rho", "Material Density", juce::NormalisableRange<float>(1000.0f, 16000.0f), 7850.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("sigma0", "Frequency independent damping", juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("sigma1", "Frequency dependent damping", juce::NormalisableRange<float>(0.01f, 1.0f), 0.05f));
     return { params.begin(), params.end() };
 }
 

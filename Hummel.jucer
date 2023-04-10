@@ -5,6 +5,13 @@
   <MAINGROUP id="Fxu9V1" name="Hummel">
     <GROUP id="{3941BE8E-ADA0-6C8C-E394-3DED91602ABD}" name="Source">
       <GROUP id="{7C4DFF1D-F7DF-E28A-F3EA-E9A57DCDD5DB}" name="Components">
+        <FILE id="Aetk8d" name="ParameterGroup.cpp" compile="1" resource="0"
+              file="Source/ParameterGroup.cpp"/>
+        <FILE id="EQkUsE" name="ParameterGroup.h" compile="0" resource="0"
+              file="Source/ParameterGroup.h"/>
+        <FILE id="xhdbjo" name="ParameterKnob.cpp" compile="1" resource="0"
+              file="Source/ParameterKnob.cpp"/>
+        <FILE id="V5NrNW" name="ParameterKnob.h" compile="0" resource="0" file="Source/ParameterKnob.h"/>
         <FILE id="lbKVIq" name="ScopeComponent.h" compile="0" resource="0"
               file="Source/ScopeComponent.h"/>
         <FILE id="mJ7vZB" name="ScopeComponent.cpp" compile="1" resource="0"

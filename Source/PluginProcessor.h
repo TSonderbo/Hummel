@@ -72,6 +72,7 @@ private:
 
     AudioBufferQueue audioBufferQueue;
     ScopeDataCollector scopeDataCollector{ audioBufferQueue };
+    juce::NamedValueSet valueSet;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HummelAudioProcessor)

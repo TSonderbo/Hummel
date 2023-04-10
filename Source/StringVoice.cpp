@@ -19,9 +19,7 @@ bool StringVoice::canPlaySound(juce::SynthesiserSound* sound)
 void StringVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
 	//f0 = c/(2L)
-	L = c * juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) / 2;
-
-	deriveParameters();
+	L = c / juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) * 2;
 
 	excite();
 }
@@ -46,32 +44,29 @@ void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numC
 	this->sampleRate = sampleRate;
 	k = 1 / sampleRate;
 
-	deriveParameters();
-
 	//excite();
 }
 
-void StringVoice::deriveParameters()
+void StringVoice::deriveParameters(const juce::NamedValueSet& valueSet)
 {
-	c = sqrt(T / rho * A);
-	h = c * k;
+	T = valueSet["T"];
+	rho = valueSet["rho"];
+	sigma_0 = valueSet["sigma0"];
+	sigma_1 = valueSet["sigma1"];
 
-	float stable = sqrtf((c * c * k * k + 4 * sigma_1 * k + sqrtf(pow(c * c * k * k + 4 * sigma_1 * k, 2) + 16 * kappa * kappa * k * k)) / 2);
-
-	float _h = c * k;
-
-	if (_h < stable)
-	{
-		DBG("UNSTABLE");
-	}
-
-	N = (int)(L / h);
-	h = (float)L / (float)N;
-	lambdaSq = (c * c) * (k * k) / (h * h);
-	hSq = h * h;
-	kappa = sqrtf(E * I / rho * A);
 	A = juce::MathConstants<float>::pi * (r * r);
 	I = juce::MathConstants<float>::pi * pow(r, 4) / 4;
+	kappa = sqrtf(E * I / rho * A);
+
+	c = sqrtf(T / rho * A);
+
+	h = sqrtf((c * c * k * k + 4 * sigma_1 * k + sqrtf(pow(c * c * k * k + 4 * sigma_1 * k, 2) + 16 * kappa * kappa * k * k)) * 0.5);
+	
+	N = static_cast<int>(L / h);
+	h = L / N;
+	lambdaSq = (c * c) * (k * k) / (h * h);
+	hSq = h * h;
+	
 	mu = (kappa*k) / hSq;
 
 	uStates = std::vector<std::vector<float>>(3, std::vector<float>(N + 1, 0));
@@ -81,8 +76,6 @@ void StringVoice::deriveParameters()
 	{
 		u[i] = &uStates[i][0];
 	}
-
-	
 }
 
 void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
@@ -122,7 +115,6 @@ void StringVoice::excite()
 
 		u[1][l + start] += 0.5 * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
 		u[0][l + start] += 0.5 * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
-
 	}
 }
 
