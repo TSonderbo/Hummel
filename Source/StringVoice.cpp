@@ -19,7 +19,9 @@ bool StringVoice::canPlaySound(juce::SynthesiserSound* sound)
 void StringVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
 {
 	//f0 = c/(2L)
-	L = c / juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) * 2;
+	L = c / (juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber) * 2);
+
+	deriveParameters();
 
 	excite();
 }
@@ -44,21 +46,27 @@ void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numC
 	this->sampleRate = sampleRate;
 	k = 1 / sampleRate;
 
-	//excite();
+	deriveParameters();
 }
 
-void StringVoice::deriveParameters(const juce::NamedValueSet& valueSet)
+void StringVoice::setParameters(const juce::NamedValueSet& valueSet) 
 {
 	T = valueSet["T"];
 	rho = valueSet["rho"];
 	sigma_0 = valueSet["sigma0"];
 	sigma_1 = valueSet["sigma1"];
 
+	deriveParameters();
+}
+
+
+void StringVoice::deriveParameters()
+{
 	A = juce::MathConstants<float>::pi * (r * r);
 	I = juce::MathConstants<float>::pi * pow(r, 4) / 4;
-	kappa = sqrtf(E * I / rho * A);
+	kappa = sqrtf((E * I) / (rho * A));
 
-	c = sqrtf(T / rho * A);
+	c = sqrtf(T / (rho * A));
 
 	h = sqrtf((c * c * k * k + 4 * sigma_1 * k + sqrtf(pow(c * c * k * k + 4 * sigma_1 * k, 2) + 16 * kappa * kappa * k * k)) * 0.5);
 	
@@ -68,6 +76,7 @@ void StringVoice::deriveParameters(const juce::NamedValueSet& valueSet)
 	hSq = h * h;
 	
 	mu = (kappa*k) / hSq;
+	muSq = mu * mu;
 
 	uStates = std::vector<std::vector<float>>(3, std::vector<float>(N + 1, 0));
 	u.resize(3, nullptr);
@@ -139,7 +148,7 @@ void StringVoice::calculateScheme()
 		u[2][l] = ((2 - 2 * lambdaSq - 6*muSq - ((4 * sigma_1 * k) / hSq)) * u[1][l]
 			+ (lambdaSq + 4 * muSq + ((2 * sigma_1 * k) / hSq)) * (u[1][l + 1] + u[1][l - 1])
 			- muSq * (u[1][l + 2] + u[1][l - 2]) + (-1 + sigma_0 * k + ((4 * sigma_1 * k) / hSq)) * u[0][l]
-			- (2 * sigma_1 * k) / hSq * (u[0][l + 1] + u[0][l - 1]))
+			- ((2 * sigma_1 * k) / hSq) * (u[0][l + 1] + u[0][l - 1]))
 			/(1+sigma_0*k);
 	}
 }

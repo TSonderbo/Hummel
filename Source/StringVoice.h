@@ -25,7 +25,8 @@ public:
 	void pitchWheelMoved(int newPitchWheelValue) override;
 #pragma endregion
 	//========================================================
-	void deriveParameters(const juce::NamedValueSet& valueSet);
+	void deriveParameters();
+	void setParameters(const juce::NamedValueSet& valueSet);
 private:
 	//Util
 	double sampleRate;
@@ -37,7 +38,6 @@ private:
 	float h; //Grid spacing
 	float hSq; //Grid spacing squared
 	int N; //Interval count
-	float lambda;//Courant number
 	float lambdaSq;//Courant number squared
 	float rho = 7850.0f; //Material Density (kg/m^3)
 	float r = 5 * pow(10, -4);//Radius
