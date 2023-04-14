@@ -13,7 +13,7 @@
 #include "StringVoice.h"
 #include "StringSynthesiser.h"
 #include "StringSound.h"
-
+#include "Plate.h"
 //==============================================================================
 /**
 */
@@ -64,6 +64,7 @@ public:
 
     //==============================================================================
     AudioBufferQueue& getAudioBufferQueue();
+    void excitePlate();
 private:
 
     juce::Synthesiser synth;
@@ -74,6 +75,7 @@ private:
     ScopeDataCollector scopeDataCollector{ audioBufferQueue };
     juce::NamedValueSet valueSet;
 
+    Plate plate;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HummelAudioProcessor)
 };

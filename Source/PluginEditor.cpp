@@ -17,6 +17,10 @@ HummelAudioProcessorEditor::HummelAudioProcessorEditor (HummelAudioProcessor& p)
     // editor's size to whatever you need it to be.
     setSize (400, 400);
 
+    exciteButton.setButtonText("Excite Plate");
+    exciteButton.addListener(this);
+
+    addAndMakeVisible(exciteButton);
     addAndMakeVisible(parameterGroup);
     addAndMakeVisible(oscilloscope);
 }
@@ -34,6 +38,12 @@ void HummelAudioProcessorEditor::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
     g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+}
+
+void HummelAudioProcessorEditor::buttonClicked(juce::Button* button)// [2]
+{
+    if(button == &exciteButton)
+        audioProcessor.excitePlate();
 }
 
 void HummelAudioProcessorEditor::resized()
@@ -60,6 +70,11 @@ void HummelAudioProcessorEditor::resized()
         .withMinWidth(200.0f)
         .withMinHeight(200.0f)
         .withFlex(1.0f));
+
+    fb.items.add(juce::FlexItem(exciteButton)
+        .withMinWidth(50.0f)
+        .withMinHeight(20.0f)
+        .withFlex(2.0f));
 
     fb.performLayout(getLocalBounds().toFloat());
 }

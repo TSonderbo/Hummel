@@ -25,7 +25,6 @@ public:
 	void pitchWheelMoved(int newPitchWheelValue) override;
 #pragma endregion
 	//========================================================
-	void deriveParameters();
 	void setParameters(const juce::NamedValueSet& valueSet);
 private:
 	//Util
@@ -58,6 +57,8 @@ private:
 	//Effects
 	juce::ADSR adsr;
 
+
+	void deriveParameters();
 	void excite();
 	float getOutput(float ratio);
 	void calculateScheme();

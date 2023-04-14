@@ -16,7 +16,9 @@
 //==============================================================================
 /**
 */
-class HummelAudioProcessorEditor  : public juce::AudioProcessorEditor
+class HummelAudioProcessorEditor  : public juce::AudioProcessorEditor,
+    juce::Button::Listener
+    
 {
 public:
     HummelAudioProcessorEditor (HummelAudioProcessor&);
@@ -25,12 +27,13 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    void buttonClicked(juce::Button* button) override;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     HummelAudioProcessor& audioProcessor;
-
+    juce::TextButton exciteButton;
     ParameterGroup parameterGroup { audioProcessor };
     ScopeComponent oscilloscope;
 

@@ -107,6 +107,8 @@ void HummelAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
             voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
     }
+
+    plate.prepareToPlay(sampleRate);
 }
 
 void HummelAudioProcessor::releaseResources()
@@ -169,6 +171,8 @@ void HummelAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     }
 
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+    plate.renderNextBlock(buffer, 0, buffer.getNumSamples());
+
     scopeDataCollector.process(buffer.getReadPointer(0), (size_t)buffer.getNumSamples());
 }
 
@@ -227,4 +231,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout HummelAudioProcessor::create
 AudioBufferQueue& HummelAudioProcessor::getAudioBufferQueue()
 {
     return audioBufferQueue;
+}
+
+void HummelAudioProcessor::excitePlate()
+{
+    plate.excite();
 }
