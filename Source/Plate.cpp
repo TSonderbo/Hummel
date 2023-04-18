@@ -73,8 +73,8 @@ void Plate::excite()
 				break;
 			}
 			
-			u[1][l + startx][m + starty] += (0.5f * (1 - cos(juce::MathConstants<float>::twoPi * l / (width - 1.0)))) * ( 0.5f * (1 - cos(juce::MathConstants<float>::twoPi * m / (width - 1.0))));
-			u[0][l + startx][m + starty] += (0.5f * (1 - cos(juce::MathConstants<float>::twoPi * l / (width - 1.0)))) * ( 0.5f * (1 - cos(juce::MathConstants<float>::twoPi * m / (width - 1.0))));
+			u[1][l + startx][m + starty] += 0.1f * (0.5f * (1 - cos(juce::MathConstants<float>::twoPi * l / (width - 1.0)))) * ( 0.5f * (1 - cos(juce::MathConstants<float>::twoPi * m / (width - 1.0))));
+			u[0][l + startx][m + starty] += 0.1f * (0.5f * (1 - cos(juce::MathConstants<float>::twoPi * l / (width - 1.0)))) * ( 0.5f * (1 - cos(juce::MathConstants<float>::twoPi * m / (width - 1.0))));
 			
 			std::string s = " ";
 			s = s.append(std::to_string(u[1][l + startx][m + starty]));

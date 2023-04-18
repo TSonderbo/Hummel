@@ -41,7 +41,7 @@ private:
     float Ly = 1.0f; //Plate width
     float D; //Stiffness coefficient
     const float E = 2 * pow(10, 11); //Young's Modulus
-    float H = 0.0002; //Thickness
+    float H = 0.01; //Thickness
     float v = 0.3f; //Poisson's ratio
     float sigma_0 = 1.0f;//Frequency independent damping
     float sigma_1 = 0.005f;//Frequency dependent damping

@@ -171,7 +171,7 @@ void HummelAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
     }
 
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-    plate.renderNextBlock(buffer, 0, buffer.getNumSamples());
+    //plate.renderNextBlock(buffer, 0, buffer.getNumSamples());
 
     scopeDataCollector.process(buffer.getReadPointer(0), (size_t)buffer.getNumSamples());
 }
