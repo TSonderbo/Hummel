@@ -12,7 +12,7 @@
 #include "ParameterKnob.h"
 
 //==============================================================================
-ParameterKnob::ParameterKnob(HummelAudioProcessor& p,juce::String identifier) :
+ParameterKnob::ParameterKnob(HummelAudioProcessor& p,juce::String identifier, juce::String name) :
 processor(p)
 {
     // In your constructor, you should add any child components, and
@@ -26,7 +26,7 @@ processor(p)
     knobLabel.setColour(juce::Label::ColourIds::textColourId, juce::Colours::white);
     knobLabel.setFont(15.0f);
     knobLabel.setJustificationType(juce::Justification::centred);
-    knobLabel.setText(identifier, juce::dontSendNotification);
+    knobLabel.setText(name, juce::dontSendNotification);
 
     attachment.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(processor.apvts, identifier, knob));
 

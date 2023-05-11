@@ -14,6 +14,7 @@
 #include "StringSynthesiser.h"
 #include "StringSound.h"
 #include "Plate.h"
+#include "Definitions.h"
 //==============================================================================
 /**
 */
@@ -76,6 +77,10 @@ private:
     juce::NamedValueSet valueSet;
 
     Plate plate;
+    //==============================================================================
+
+    void checkParameterValues();
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HummelAudioProcessor)
 };

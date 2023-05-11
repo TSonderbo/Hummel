@@ -18,7 +18,7 @@
 class ParameterKnob  : public juce::Component
 {
 public:
-    ParameterKnob(HummelAudioProcessor& p, juce::String identifier);
+    ParameterKnob(HummelAudioProcessor& p, juce::String identifier, juce::String name);
     ~ParameterKnob() override;
 
     void paint (juce::Graphics&) override;

@@ -12,22 +12,29 @@
 #include "ParameterGroup.h"
 
 //==============================================================================
-ParameterGroup::ParameterGroup(HummelAudioProcessor& p)
+ParameterGroup::ParameterGroup(HummelAudioProcessor& p, juce::String groupTitle, 
+    std::vector<juce::String> ids, std::vector<juce::String> names)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
-    parameterKnobs.add(new ParameterKnob(p, "T" ));
-    parameterKnobs.add(new ParameterKnob(p, "rho"));
-    parameterKnobs.add(new ParameterKnob(p, "sigma0"));
-    parameterKnobs.add(new ParameterKnob(p, "sigma1"));
+    if (ids.size() != names.size())
+    {
+        jassert("Id count does not match names count for parameter group");
+    }
 
-    for (int i = 0; i < parameterKnobs.size(); i++)
+    this->groupTitle = groupTitle;
+
+    for (int i = 0; i < ids.size(); i++)
+    {
+        parameterKnobs.add(new ParameterKnob(p, ids[i], names[i]));
         addAndMakeVisible(parameterKnobs[i]);
+    }
 }
 
 ParameterGroup::~ParameterGroup()
 {
+
 }
 
 void ParameterGroup::paint (juce::Graphics& g)
@@ -40,6 +47,10 @@ void ParameterGroup::paint (juce::Graphics& g)
     bounds.reduce(4.0f, 4.0f);
 
     g.drawRect (bounds, 2);   // draw an outline around the component
+
+    g.setColour(juce::Colours::white);
+    g.setFont(15.0f);
+    g.drawFittedText(groupTitle, 8.0f, 8.0f, 100.0f, 15.0f, juce::Justification::centred, 1);
 }
 
 void ParameterGroup::resized()

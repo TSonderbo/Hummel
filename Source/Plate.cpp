@@ -50,6 +50,10 @@ void Plate::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSam
 void Plate::setParameters(const juce::NamedValueSet& valueSet)
 {
 	//Param update
+	H = valueSet[ID_Plate_H];
+	rho = valueSet[ID_Plate_Rho];
+	sigma_0 = valueSet[ID_Plate_Sigma_0];
+	sigma_1 = valueSet[ID_Plate_Sigma_1];
 
 	//derive other parameters..
 	deriveParameters();

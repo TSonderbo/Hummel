@@ -24,11 +24,13 @@ void StringVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesise
 	deriveParameters();
 
 	excite();
+
+	adsr.noteOn();
 }
 
 void StringVoice::stopNote(float velocity, bool allowTailOff)
 {
-
+	adsr.noteOff();
 }
 
 void StringVoice::controllerMoved(int controllerNumber, int newControllerValue)
@@ -51,10 +53,20 @@ void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numC
 
 void StringVoice::setParameters(const juce::NamedValueSet& valueSet) 
 {
-	T = valueSet["T"];
-	rho = valueSet["rho"];
-	sigma_0 = valueSet["sigma0"];
-	sigma_1 = valueSet["sigma1"];
+	T = valueSet[ID_String_T];
+	rho = valueSet[ID_String_Rho];
+	sigma_0 = valueSet[ID_String_Sigma_0];
+	sigma_1 = valueSet[ID_String_Sigma_1];
+
+	juce::ADSR::Parameters params;
+	params.attack = valueSet[ID_String_Attack];
+	params.decay = valueSet[ID_String_Decay];
+	params.sustain = valueSet[ID_String_Sustain];
+	params.release = valueSet[ID_String_Release];
+
+	adsr.setParameters(params);
+
+	adsrEnabled = static_cast<bool>(valueSet[ID_String_ADSR_Toggle]);
 
 	deriveParameters();
 }
@@ -97,6 +109,12 @@ void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int st
 		calculateScheme();
 
 		sample = limit(getOutput(0.3));
+
+		if (adsrEnabled)
+		{
+			sample *= adsr.getNextSample();
+		}
+
 
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
 		{

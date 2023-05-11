@@ -9,7 +9,7 @@
 */
 
 #include <JuceHeader.h>
-
+#include "Definitions.h"
 class StringVoice : public juce::SynthesiserVoice
 {
 public:
@@ -56,7 +56,7 @@ private:
 
 	//Effects
 	juce::ADSR adsr;
-
+	bool adsrEnabled;
 
 	void deriveParameters();
 	void excite();

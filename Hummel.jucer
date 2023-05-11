@@ -18,6 +18,7 @@
               file="Source/ScopeComponent.cpp"/>
       </GROUP>
       <GROUP id="{4250BD23-5CF6-C7E1-7D2A-DA96E91B4248}" name="Util">
+        <FILE id="zfaHXJ" name="Definitions.h" compile="0" resource="0" file="Source/Definitions.h"/>
         <FILE id="mzyrCX" name="ScopeDataCollector.h" compile="0" resource="0"
               file="Source/ScopeDataCollector.h"/>
         <FILE id="wRiwzC" name="ScopeDataCollector.cpp" compile="1" resource="0"

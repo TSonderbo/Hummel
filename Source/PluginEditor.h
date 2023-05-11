@@ -34,8 +34,11 @@ private:
     // access the processor object that created it.
     HummelAudioProcessor& audioProcessor;
     juce::TextButton exciteButton;
-    ParameterGroup parameterGroup { audioProcessor };
+    juce::OwnedArray<ParameterGroup> parameterGroups;
     ScopeComponent oscilloscope;
+
+
+    void addParameterGroups();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HummelAudioProcessorEditor)
 };
