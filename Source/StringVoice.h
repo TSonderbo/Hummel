@@ -10,11 +10,13 @@
 
 #include <JuceHeader.h>
 #include "Definitions.h"
+#include "Plate.h"
 class StringVoice : public juce::SynthesiserVoice
 {
 public:
 
 	//========================================================
+	StringVoice(Plate& p, float connectionRatioX, float ConnectionRationY);
 #pragma region overrides
 	bool canPlaySound(juce::SynthesiserSound* sound) override;
 	void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition) override;
@@ -26,11 +28,12 @@ public:
 #pragma endregion
 	//========================================================
 	void setParameters(const juce::NamedValueSet& valueSet);
+	void updateStates();
 private:
 	//Util
 	double sampleRate;
 	float k; // Sampling period
-
+	float kSq;
 	//String
 	float c = 400.0f; //Wavespeed
 	float L = 1.0f; //Length of string
@@ -58,10 +61,21 @@ private:
 	juce::ADSR adsr;
 	bool adsrEnabled;
 
+	//Plate & Connection
+	Plate& plate;
+	float conX, conY; //Connection ratio for point on plate
+
+	const float stringCon = 0.2f; //Connection point on string
+
+	float K1 = 10000.0f;
+	float K3 = 10000000.0f;
+	float R = 10.0f;
+
 	void deriveParameters();
 	void excite();
 	float getOutput(float ratio);
 	void calculateScheme();
-	void updateStates();
+	
 	float limit(float sample);
+	void applyConnectionForce();
 };

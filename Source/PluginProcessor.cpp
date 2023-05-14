@@ -22,9 +22,10 @@ HummelAudioProcessor::HummelAudioProcessor()
 	), apvts(*this, nullptr, "Parameters", createParams())
 #endif
 {
-	for (int i = 0; i < 3; i++)
+	int voices = 3;
+	for (int i = 0; i < voices; i++)
 	{
-		synth.addVoice(new StringVoice());
+		synth.addVoice(new StringVoice(plate, 0.2f, 0.2f + (0.6f / voices * i)));
 	}
 	synth.addSound(new StringSound());
 }
@@ -154,8 +155,22 @@ void HummelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 
 	checkParameterValues();
 
-	synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
-	//plate.renderNextBlock(buffer, 0, buffer.getNumSamples());
+	for (auto i = 0; i < buffer.getNumSamples(); i++)
+	{
+		//Get plate wStar
+		plate.renderNextBlock(buffer, i, 1);
+		//Get string uStar, apply connection forces & read output into buffer
+		synth.renderNextBlock(buffer, midiMessages, i, 1);
+		// Update uStates for strings and plate
+		plate.updateStates();
+		for (int i = 0; i < synth.getNumVoices(); i++)
+		{
+			if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(i)))
+			{
+				voice->updateStates();
+			}
+		}
+	}
 
 	scopeDataCollector.process(buffer.getReadPointer(0), (size_t)buffer.getNumSamples());
 }

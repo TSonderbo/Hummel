@@ -35,14 +35,14 @@ void Plate::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSam
 
 		calculateScheme();
 
-		sample = limit(getOutput(0.3));
+		sample = limit(getOutput(0.5));
 
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
 		{
-			outputBuffer.addSample(channel, startSample, sample);
+			//outputBuffer.addSample(channel, startSample, sample);
 		}
 
-		updateStates();
+		//updateStates();
 		startSample++;
 	}
 }
@@ -87,6 +87,16 @@ void Plate::excite()
 		DBG(str);
 	}
 
+}
+
+float Plate::getDisplacement(int n, float ratioX, float ratioY)
+{
+	int x, y;
+
+	x = floor(ratioX * Nx);
+	y = floor(ratioY * Ny);
+
+	return u[n][x][y];
 }
 
 void Plate::deriveParameters()
@@ -160,6 +170,36 @@ void Plate::updateStates()
 	u[2] = uPrev;
 }
 
+float Plate::geth()
+{
+	return h;
+}
+
+float Plate::getH()
+{
+	return H;
+}
+
+float Plate::getRho()
+{
+	return rho;
+}
+
+float Plate::getSigma0()
+{
+	return sigma_0;
+}
+
+void Plate::applyConnectionForce(float f, float ratioX, float ratioY)
+{
+	int x, y;
+
+	x = floor(ratioX * Nx);
+	y = floor(ratioY * Ny);
+
+	u[2][x][y] = u[2][x][y] + 1 / (h * h) * ((f * (k * k)) / (rho * H * (1 + sigma_0 * k)));
+}
+
 float Plate::limit(float sample)
 {
 	if (sample > 1.0f)
@@ -175,3 +215,4 @@ float Plate::limit(float sample)
 	else
 		return sample;
 }
+

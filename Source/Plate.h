@@ -25,11 +25,21 @@ public:
     void setParameters(const juce::NamedValueSet& valueSet);
 
     void excite();
+    float getDisplacement(int n, float ratioX, float ratioY);
+    void updateStates();
+
+    float geth();
+    float getH();
+    float getRho();
+    float getSigma0();
+
+    void applyConnectionForce(float f, float ratioX, float ratioY);
 private:
 
     //Util
     double sampleRate;
     float k; // Sampling period
+
     float S;
 
     //Plate
@@ -57,6 +67,6 @@ private:
     void deriveParameters();
     float getOutput(float ratio);
     void calculateScheme();
-    void updateStates();
+    
     float limit(float sample);
 };
