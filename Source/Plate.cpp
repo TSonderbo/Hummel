@@ -61,7 +61,7 @@ void Plate::setParameters(const juce::NamedValueSet& valueSet)
 
 void Plate::excite()
 {
-	float width = std::min(Nx, Ny) - 2;
+	float width = 10.0f;
 	const float excitationLoc = 0.5f;
 	
 	int startx = std::max(floor((Nx + 1) * excitationLoc) - floor(width * 0.5f), 2.0f);
@@ -127,6 +127,11 @@ void Plate::deriveParameters()
 	{
 		u[i] = &uStates[i][0];
 	}
+
+	std::string str = "Plate gridpoints: ";
+	str.append(std::to_string(Nx * Ny));
+
+	DBG(str);
 }
 
 float Plate::getOutput(float ratio)
