@@ -27,7 +27,7 @@ private:
     size_t numCollected;
     float prevSample = float(100);
 
-    static constexpr auto triggerLevel = float(0.05);
+    static constexpr auto triggerLevel = float(0.001);
 
     enum class State { waitingForTrigger, collecting } state{ State::waitingForTrigger };
 };

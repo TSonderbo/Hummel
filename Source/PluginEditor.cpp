@@ -99,13 +99,17 @@ void HummelAudioProcessorEditor::resized()
 void HummelAudioProcessorEditor::addParameterGroups()
 {
     //ADSR param group
-    std::vector<juce::String> adsrIds{ ID_String_Attack, ID_String_Decay, ID_String_Sustain, ID_String_Release };
-    std::vector<juce::String> adsrNames{ NAME_String_Attack, NAME_String_Decay, NAME_String_Sustain, NAME_String_Release };
-    parameterGroups.add(new ParameterGroup(audioProcessor, "ADSR Parameters", adsrIds, adsrNames));
+    std::vector<juce::String> connectionIds{ ID_Connection_K1, ID_Connection_K3, ID_Connection_R};
+    std::vector<juce::String> connectionNames{ NAME_Connection_K1, NAME_Connection_K3, NAME_Connection_R};
+    parameterGroups.add(new ParameterGroup(audioProcessor, "Connection Parameters", connectionIds, connectionNames));
     //String param group
     std::vector<juce::String> stringIds{ ID_String_T, ID_String_Rho, ID_String_Sigma_0, ID_String_Sigma_1 };
     std::vector<juce::String> stringNames{ NAME_String_T, NAME_String_Rho, NAME_String_Sigma_0, NAME_String_Sigma_1 };
     parameterGroups.add(new ParameterGroup(audioProcessor, "String Parameters", stringIds, stringNames));
+    //String input param group
+    std::vector<juce::String> stringInputIds{ ID_String_Input_Amp, ID_String_Input_Width, ID_String_Input_Loc };
+    std::vector<juce::String> stringInputNames{ NAME_String_Input_Amp, NAME_String_Input_Width, NAME_String_Input_Loc };
+    parameterGroups.add(new ParameterGroup(audioProcessor, "String Input Parameters", stringInputIds, stringInputNames));
     //Plate param group
     std::vector<juce::String> plateIds{ ID_Plate_H, ID_Plate_Rho, ID_Plate_Sigma_0, ID_Plate_Sigma_1 };
     std::vector<juce::String> plateNames{ NAME_Plate_H, NAME_Plate_Rho, NAME_Plate_Sigma_0, NAME_Plate_Sigma_1 };

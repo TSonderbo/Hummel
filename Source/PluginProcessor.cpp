@@ -231,6 +231,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout HummelAudioProcessor::create
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Rho, NAME_Plate_Rho, juce::NormalisableRange<float>(1000.0f, 16000.0f), 7850.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Sigma_0, NAME_Plate_Sigma_0, juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Sigma_1, NAME_Plate_Sigma_1, juce::NormalisableRange<float>(0.0f, 1.0f), 0.05f));
+
+	//Add params for connection
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_K1, NAME_Connection_K1, juce::NormalisableRange<float>(1000.0f, 20000.0f), 10000.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_K3, NAME_Connection_K3, juce::NormalisableRange<float>(1000000.0f, 20000000.0f), 10000000.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_R, NAME_Connection_R, juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
+
+	//Add params for excitation
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Input_Amp, NAME_String_Input_Amp, juce::NormalisableRange<float>(0.1f, 1.0f), 0.5f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Input_Width, NAME_String_Input_Width, juce::NormalisableRange<float>(1.0f, 20.0f), 10.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Input_Loc, NAME_String_Input_Loc, juce::NormalisableRange<float>(0.1f, 0.9f), 0.5f));
+
+
 	return { params.begin(), params.end() };
 }
 
@@ -241,11 +253,20 @@ void HummelAudioProcessor::checkParameterValues()
 	stringValueChanged |= valueSet.set(ID_String_Rho, apvts.getRawParameterValue(ID_String_Rho)->load());
 	stringValueChanged |= valueSet.set(ID_String_Sigma_0, apvts.getRawParameterValue(ID_String_Sigma_0)->load());
 	stringValueChanged |= valueSet.set(ID_String_Sigma_1, apvts.getRawParameterValue(ID_String_Sigma_1)->load());
+
 	stringValueChanged |= valueSet.set(ID_String_Attack, apvts.getRawParameterValue(ID_String_Attack)->load());
 	stringValueChanged |= valueSet.set(ID_String_Decay, apvts.getRawParameterValue(ID_String_Decay)->load());
 	stringValueChanged |= valueSet.set(ID_String_Sustain, apvts.getRawParameterValue(ID_String_Sustain)->load());
 	stringValueChanged |= valueSet.set(ID_String_Release, apvts.getRawParameterValue(ID_String_Release)->load());
 	stringValueChanged |= valueSet.set(ID_String_ADSR_Toggle, apvts.getRawParameterValue(ID_String_ADSR_Toggle)->load());
+
+	stringValueChanged |= valueSet.set(ID_Connection_K1, apvts.getRawParameterValue(ID_Connection_K1)->load());
+	stringValueChanged |= valueSet.set(ID_Connection_K3, apvts.getRawParameterValue(ID_Connection_K3)->load());
+	stringValueChanged |= valueSet.set(ID_Connection_R, apvts.getRawParameterValue(ID_Connection_R)->load());
+
+	stringValueChanged |= valueSet.set(ID_String_Input_Amp, apvts.getRawParameterValue(ID_String_Input_Amp)->load());
+	stringValueChanged |= valueSet.set(ID_String_Input_Width, apvts.getRawParameterValue(ID_String_Input_Width)->load());
+	stringValueChanged |= valueSet.set(ID_String_Input_Loc, apvts.getRawParameterValue(ID_String_Input_Loc)->load());
 
 	for (int i = 0; i < synth.getNumVoices(); i++)
 	{

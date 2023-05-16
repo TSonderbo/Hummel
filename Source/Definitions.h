@@ -44,3 +44,21 @@
 #define NAME_Plate_Rho "Material density"
 #define NAME_Plate_Sigma_0 "Freq independent damping"
 #define NAME_Plate_Sigma_1 "Freq dependent damping"
+
+//Connection parameter definitions
+#define ID_Connection_K1 "k1"
+#define ID_Connection_K3 "k3"
+#define ID_Connection_R "r"
+
+#define NAME_Connection_K1 "Linear spring coefficient"
+#define NAME_Connection_K3 "Nonlinear spring coefficient"
+#define NAME_Connection_R "Damping coefficient"
+
+//Input Amplitude
+#define ID_String_Input_Amp "excitation_amp"
+#define ID_String_Input_Width "excitation_width"
+#define ID_String_Input_Loc "excitation_loc"
+
+#define NAME_String_Input_Amp "Amplitude"
+#define NAME_String_Input_Width "Width"
+#define NAME_String_Input_Loc "Loc"

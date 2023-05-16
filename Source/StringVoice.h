@@ -71,6 +71,12 @@ private:
 	float K3 = 10000000.0f;
 	float R = 10.0f;
 
+	//Input
+	float input;
+	float width;
+	float excitationLoc;
+
+
 	void deriveParameters();
 	void excite();
 	float getOutput(float ratio);

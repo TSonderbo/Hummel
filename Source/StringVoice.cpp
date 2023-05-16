@@ -71,6 +71,14 @@ void StringVoice::setParameters(const juce::NamedValueSet& valueSet)
 	params.sustain = valueSet[ID_String_Sustain];
 	params.release = valueSet[ID_String_Release];
 
+	K1 = valueSet[ID_Connection_K1];
+	K3 = valueSet[ID_Connection_K3];
+	R = valueSet[ID_Connection_R];
+
+	input = valueSet[ID_String_Input_Amp];
+	width = valueSet[ID_String_Input_Width];
+	excitationLoc = valueSet[ID_String_Input_Loc];
+
 	adsr.setParameters(params);
 
 	adsrEnabled = static_cast<bool>(valueSet[ID_String_ADSR_Toggle]);
@@ -162,20 +170,18 @@ void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int st
 
 void StringVoice::excite()
 {
-	const float width = 10.0f;
-	const float excitationLoc = 0.2f;
 
-	int start = std::max(floor((N + 1) * excitationLoc) - floor(width * 0.5f), 1.0f);
+	int start = std::max(floor((N + 1) * excitationLoc) - floor(width * 0.5f), 2.0f);
 
 	for (int l = 0; l < width; l++)
 	{
-		if (l + start > N - 1)
+		if (l + start > N - 2)
 		{
 			break;
 		}
 
-		u[1][l + start] += 0.5 * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
-		u[0][l + start] += 0.5 * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
+		u[1][l + start] += input * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
+		u[0][l + start] += input * (1 - cos(2.0 * juce::MathConstants<float>::pi * l / (width - 1.0)));
 	}
 }
 

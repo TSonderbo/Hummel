@@ -61,18 +61,18 @@ void Plate::setParameters(const juce::NamedValueSet& valueSet)
 
 void Plate::excite()
 {
-	const float width = 10.0f;
-	const float excitationLoc = 0.2f;
+	float width = std::min(Nx, Ny) - 2;
+	const float excitationLoc = 0.5f;
 	
-	int startx = std::max(floor((Nx + 1) * excitationLoc) - floor(width * 0.5f), 1.0f);
-	int starty = std::max(floor((Ny + 1) * excitationLoc) - floor(width * 0.5f), 1.0f);
+	int startx = std::max(floor((Nx + 1) * excitationLoc) - floor(width * 0.5f), 2.0f);
+	int starty = std::max(floor((Ny + 1) * excitationLoc) - floor(width * 0.5f), 2.0f);
 
 	for (int l = 0; l < width; l++)
 	{
 		juce::String str("");
 		for (int m = 0; m < width; m++)
 		{
-			if (l + startx > Nx - 1 || m + starty > Ny )
+			if (l + startx > Nx - 2 || m + starty > Ny - 2)
 			{
 				break;
 			}
