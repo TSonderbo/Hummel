@@ -25,7 +25,7 @@ HummelAudioProcessor::HummelAudioProcessor()
 	int voices = 3;
 	for (int i = 0; i < voices; i++)
 	{
-		synth.addVoice(new StringVoice(plate, 0.2f, 0.2f + (0.6f / voices * i)));
+		synth.addVoice(new StringVoice());
 	}
 	synth.addSound(new StringSound());
 }
@@ -105,7 +105,8 @@ void HummelAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 	{
 		if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(i)))
 		{
-			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels(),
+				plate, 0.2f, 0.2f + (0.6f / synth.getNumVoices() * i));
 		}
 	}
 
@@ -150,12 +151,16 @@ void HummelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 	auto totalNumInputChannels = getTotalNumInputChannels();
 	auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+	auto numSamples = buffer.getNumSamples();
+
 	for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-		buffer.clear(i, 0, buffer.getNumSamples());
+	{
+		buffer.clear(i, 0, numSamples);
+	}
 
 	checkParameterValues();
 
-	for (auto i = 0; i < buffer.getNumSamples(); i++)
+	for (int i = 0; i < numSamples; i++)
 	{
 		//Get plate wStar
 		plate.renderNextBlock(buffer, i, 1);
@@ -163,16 +168,20 @@ void HummelAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::
 		synth.renderNextBlock(buffer, midiMessages, i, 1);
 		// Update uStates for strings and plate
 		plate.updateStates();
-		for (int i = 0; i < synth.getNumVoices(); i++)
+		for (int j = 0; j < synth.getNumVoices(); j++)
 		{
-			if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(i)))
+			if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(j)))
 			{
 				voice->updateStates();
 			}
 		}
 	}
 
-	scopeDataCollector.process(buffer.getReadPointer(0), (size_t)buffer.getNumSamples());
+	//This has proper midi behavior - the above does not...
+	//synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
+	//plate.renderNextBlock(buffer, 0, buffer.getNumSamples());
+
+	scopeDataCollector.process(buffer.getReadPointer(0), (size_t)numSamples);
 }
 
 //==============================================================================
@@ -300,5 +309,6 @@ AudioBufferQueue& HummelAudioProcessor::getAudioBufferQueue()
 
 void HummelAudioProcessor::excitePlate()
 {
+	//TODO Needs mutex
 	plate.excite();
 }

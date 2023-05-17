@@ -35,7 +35,7 @@ void Plate::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSam
 
 		calculateScheme();
 
-		sample = limit(getOutput(0.5));
+		//sample = limit(getOutput(0.5));
 
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
 		{

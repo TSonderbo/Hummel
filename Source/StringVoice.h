@@ -16,13 +16,13 @@ class StringVoice : public juce::SynthesiserVoice
 public:
 
 	//========================================================
-	StringVoice(Plate& p, float connectionRatioX, float ConnectionRationY);
 #pragma region overrides
 	bool canPlaySound(juce::SynthesiserSound* sound) override;
 	void startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition) override;
 	void stopNote(float velocity, bool allowTailOff) override;
 	void controllerMoved(int controllerNumber, int newControllerValue) override;
-	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels);
+	void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels,
+		Plate& p, float connectionRatioX, float connectionRatioY);
 	void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override;
 	void pitchWheelMoved(int newPitchWheelValue) override;
 #pragma endregion
@@ -62,7 +62,7 @@ private:
 	bool adsrEnabled;
 
 	//Plate & Connection
-	Plate& plate;
+	Plate* plate;
 	float conX, conY; //Connection ratio for point on plate
 
 	const float stringCon = 0.2f; //Connection point on string
@@ -76,6 +76,7 @@ private:
 	float width;
 	float excitationLoc;
 
+	int callCount = 0;
 
 	void deriveParameters();
 	void excite();

@@ -10,12 +10,6 @@
 
 #include "StringVoice.h"
 
-StringVoice::StringVoice(Plate& p, float connectionRatioX, float connectionRatioY) : plate(p)
-{
-	conX = connectionRatioX;
-	conY = connectionRatioY;
-}
-
 bool StringVoice::canPlaySound(juce::SynthesiserSound* sound)
 {
 	//Return true if sound is valid
@@ -29,14 +23,16 @@ void StringVoice::startNote(int midiNoteNumber, float velocity, juce::Synthesise
 
 	deriveParameters();
 
-	excite();
+	callCount++;
 
-	adsr.noteOn();
+	DBG(std::to_string(callCount));
+
+	excite();
 }
 
 void StringVoice::stopNote(float velocity, bool allowTailOff)
 {
-	adsr.noteOff();
+
 }
 
 void StringVoice::controllerMoved(int controllerNumber, int newControllerValue)
@@ -49,8 +45,14 @@ void StringVoice::pitchWheelMoved(int newPitchWheelValue)
 
 }
 
-void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels)
+void StringVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels, 
+	Plate& p, float connectionRatioX, float connectionRatioY)
 {
+	plate = &p;
+
+	conX = connectionRatioX;
+	conY = connectionRatioY;
+
 	this->sampleRate = sampleRate;
 	k = 1 / sampleRate;
 	kSq = k * k;
@@ -118,25 +120,25 @@ void StringVoice::applyConnectionForce()
 {
 	int conLoc = static_cast<int>(stringCon * N); // Connection location on string
 
-	float eta = u[1][conLoc] - plate.getDisplacement(1, conX, conY);
-	float etaPrev = u[0][conLoc] - plate.getDisplacement(0, conX, conY);
+	float eta = u[1][conLoc] - plate->getDisplacement(1, conX, conY);
+	float etaPrev = u[0][conLoc] - plate->getDisplacement(0, conX, conY);
 
 	float uStar = u[2][conLoc];
-	float wStar = plate.getDisplacement(2, conX, conY);
+	float wStar = plate->getDisplacement(2, conX, conY);
 
 	float rPlus = K1 / 4 + K3 * (eta * eta) / 2 + R / (2 * k);
 	float rMinus = K1 / 4 + K3 * (eta * eta) / 2 - R / (2 * k);
 
-	float plate_h = plate.geth();
-	float plate_H = plate.getH();
-	float plate_rho = plate.getRho();
-	float plate_sigma_0 = plate.getSigma0();
+	float plate_h = plate->geth();
+	float plate_H = plate->getH();
+	float plate_rho = plate->getRho();
+	float plate_sigma_0 = plate->getSigma0();
 
 	float f = (uStar - wStar + (K1 / (2 * rPlus) * eta) + (rMinus / (rPlus)*etaPrev))
 		/ (1 / rPlus + (1.0f / h * kSq) / (rho * A * (1 + sigma_0 * k)) + (1.0f / (plate_h * plate_h) * kSq) / (plate_rho * plate_H * (1 + plate_sigma_0 * k)));
 
 	u[2][conLoc] = uStar - 1 / h * ((f * kSq) / (rho * A * (1 + sigma_0 * k)));
-	plate.applyConnectionForce(f, conX, conY);
+	plate->applyConnectionForce(f, conX, conY);
 }
 
 void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples)
@@ -152,10 +154,10 @@ void StringVoice::renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int st
 
 		sample = limit(getOutput(0.3));
 
-		if (adsrEnabled)
+		/*if (adsrEnabled)
 		{
 			sample *= adsr.getNextSample();
-		}
+		}*/
 
 
 		for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
