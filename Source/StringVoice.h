@@ -65,7 +65,7 @@ private:
 	Plate* plate;
 	float conX, conY; //Connection ratio for point on plate
 
-	const float stringCon = 0.2f; //Connection point on string
+	const float stringCon = 0.18f; //Connection point on string
 
 	float K1 = 10000.0f;
 	float K3 = 10000000.0f;

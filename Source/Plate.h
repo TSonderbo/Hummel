@@ -47,10 +47,10 @@ private:
     float hSq;
     int Ny; //Interval count for length
     int Nx; //Interval count for width
-    float Lx = 1.5f; //Plate length
-    float Ly = 1.0f; //Plate width
+    float Lx = 0.7f; //Plate length
+    float Ly = 0.23f; //Plate width
     float D; //Stiffness coefficient
-    const float E = 2 * pow(10, 11); //Young's Modulus
+    const float E = 8.5 * pow(10, 9); //Young's Modulus
     float H = 0.01; //Thickness
     float v = 0.3f; //Poisson's ratio
     float sigma_0 = 1.0f;//Frequency independent damping

@@ -22,7 +22,7 @@ HummelAudioProcessor::HummelAudioProcessor()
 	), apvts(*this, nullptr, "Parameters", createParams())
 #endif
 {
-	int voices = 3;
+	int voices = 4;
 	for (int i = 0; i < voices; i++)
 	{
 		synth.addVoice(new StringVoice());
@@ -106,7 +106,7 @@ void HummelAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 		if (auto voice = dynamic_cast<StringVoice*>(synth.getVoice(i)))
 		{
 			voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels(),
-				plate, 0.2f, 0.2f + (0.6f / synth.getNumVoices() * i));
+				plate, 0.2f, 0.3f + (0.3f / (synth.getNumVoices() - 1)* i));
 		}
 	}
 
@@ -233,18 +233,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout HummelAudioProcessor::create
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_T, NAME_String_T, juce::NormalisableRange<float>(200.0f, 2000.0f), 1000.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Rho, NAME_String_Rho, juce::NormalisableRange<float>(1000.0f, 16000.0f), 7850.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Sigma_0, ID_String_Sigma_1, juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Sigma_1, NAME_String_Sigma_1, juce::NormalisableRange<float>(0.0f, 1.0f), 0.05f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Sigma_1, NAME_String_Sigma_1, juce::NormalisableRange<float>(0.0f, 1.0f), 0.005f));
 
 	//Add params for plate
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_H, NAME_Plate_H, juce::NormalisableRange<float>(0.001f, 0.05f), 0.01f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Rho, NAME_Plate_Rho, juce::NormalisableRange<float>(350.0f, 10000.0f), 7850.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_H, NAME_Plate_H, juce::NormalisableRange<float>(0.001f, 0.05f), 0.001f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Rho, NAME_Plate_Rho, juce::NormalisableRange<float>(350.0f, 600.0f), 350.0f));
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Sigma_0, NAME_Plate_Sigma_0, juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Sigma_1, NAME_Plate_Sigma_1, juce::NormalisableRange<float>(0.0f, 1.0f), 0.05f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Plate_Sigma_1, NAME_Plate_Sigma_1, juce::NormalisableRange<float>(0.0f, 1.0f), 0.005f));
 
 	//Add params for connection
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_K1, NAME_Connection_K1, juce::NormalisableRange<float>(1000.0f, 20000.0f), 10000.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_K3, NAME_Connection_K3, juce::NormalisableRange<float>(1000000.0f, 20000000.0f), 10000000.0f));
-	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_R, NAME_Connection_R, juce::NormalisableRange<float>(0.01f, 2.0f), 1.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_K3, NAME_Connection_K3, juce::NormalisableRange<float>(1000.0f, 20000.0f), 10000.0f));
+	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_Connection_R, NAME_Connection_R, juce::NormalisableRange<float>(0.01f, 0.5f), 0.05f));
 
 	//Add params for excitation
 	params.push_back(std::make_unique<juce::AudioParameterFloat>(ID_String_Input_Amp, NAME_String_Input_Amp, juce::NormalisableRange<float>(0.1f, 1.0f), 0.5f));
