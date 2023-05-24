@@ -33,16 +33,6 @@
           <FILE id="MMXVda" name="Plate.cpp" compile="1" resource="0" file="Source/Plate.cpp"/>
           <FILE id="RWTA1D" name="Plate.h" compile="0" resource="0" file="Source/Plate.h"/>
         </GROUP>
-        <GROUP id="{E30480EA-C856-89FE-4BA2-66FF1A9825E9}" name="Oscillator">
-          <FILE id="j0k4Kh" name="WavetableOscillator.h" compile="0" resource="0"
-                file="Source/WavetableOscillator.h"/>
-          <FILE id="xKCKAG" name="WavetableOscillator.cpp" compile="1" resource="0"
-                file="Source/WavetableOscillator.cpp"/>
-        </GROUP>
-        <GROUP id="{BD617DD5-355A-9C79-0E80-B27292B80DE4}" name="Delay">
-          <FILE id="sP8FFP" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
-          <FILE id="jUhHcL" name="DelayLine.h" compile="0" resource="0" file="Source/DelayLine.h"/>
-        </GROUP>
         <GROUP id="{4F6A9C79-D7E5-0E45-9B12-920A31EC50A8}" name="String">
           <FILE id="ZxGkNR" name="StringVoice.h" compile="0" resource="0" file="Source/StringVoice.h"/>
           <FILE id="UvCOKL" name="StringSynthesiser.h" compile="0" resource="0"
